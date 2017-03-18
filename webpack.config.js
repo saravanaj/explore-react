@@ -2,12 +2,22 @@ var webpack = require("webpack");
 
 module.exports = {
     devtool: "source-map",
+    devServer: {
+        historyApiFallback: true
+    },
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
     },
     entry: {
         app: "./src/main.tsx",
         vendor: "./src/vendor.tsx",
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin(["app", "vendor"])
+    ],
+    output: {
+        path: __dirname + "/dist",
+        filename: "[name].js"
     },
     module: {
         rules: [{
@@ -31,6 +41,13 @@ module.exports = {
                 }, {
                     loader: "sass-loader" // compiles Sass to CSS
                 }]
+            },
+            {
+                test: /\.html$/,
+                loader: 'file-loader',
+                query: {
+                    name: '[name].[ext]'
+                }
             }
         ]
     }
